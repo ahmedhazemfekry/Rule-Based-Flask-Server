@@ -1,5 +1,3 @@
-from unittest.mock import MagicMock
-
 import pytest
 
 from pyknow.fact import Fact, Field
@@ -110,64 +108,3 @@ def test_validate_raise_valueerror_on_missing_field():
 
     with pytest.raises(ValueError):
         f1.validate()
-
-
-def test_fields_are_not_present_in_class():
-    class MockFact(Fact):
-        myfield = Field(int)
-
-    assert not hasattr(MockFact, 'myfield')
-
-
-def test_fields_are_not_present_in_instance():
-    class MockFact(Fact):
-        myfield = Field(int)
-
-    obj = MockFact()
-
-    assert not hasattr(obj, 'myfield')
-
-
-def test_fields_are_inherited():
-    class MockFactBase(Fact):
-        mybasefield = Field(str, default="base")
-
-    class MockFact(MockFactBase):
-        myfield = Field(str, default="class")
-
-    obj = MockFact()
-    assert obj["myfield"] == "class"
-    assert obj["mybasefield"] == "base"
-
-
-def test_inherited_fields_can_be_overwritten():
-    class MockFactBase(Fact):
-        mybasefield = Field(str, default="base")
-
-    class MockFact(MockFactBase):
-        mybasefield = Field(str, default="notbase")
-        myfield = Field(str, default="class")
-
-    obj = MockFact()
-    assert obj["myfield"] == "class"
-    assert obj["mybasefield"] == "notbase"
-
-
-def test_fields_default_are_called_once_per_instance():
-    mymock = MagicMock(return_value="TEST")
-
-    class MockFact(Fact):
-        myfield = Field(str, default=mymock)
-
-    mymock.assert_not_called()
-
-    f1 = MockFact()
-    assert mymock.call_count == 0
-    assert f1["myfield"] == "TEST"
-    assert mymock.call_count == 1
-    f1["myfield"]
-    assert mymock.call_count == 1
-
-    f2 = MockFact()
-    assert f2["myfield"] == "TEST"
-    assert mymock.call_count == 2

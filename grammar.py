@@ -1,5 +1,4 @@
 from pyknow import *
-
 class Knowledge(KnowledgeEngine):
   category = ""
   @Rule(Fact(title = P(lambda title : title.find("Cola")!=-1)))
