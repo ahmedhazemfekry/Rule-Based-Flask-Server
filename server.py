@@ -1,4 +1,4 @@
-import grammar as gm
+import Rules as r
 import json
 import os
 from flask import Flask, redirect, url_for, request, jsonify, flash
@@ -24,7 +24,7 @@ def Match():
     JsonData = json.loads(Data)
     # Extracting product titles and product classes
     titles = JsonData["products"]
-    engine = gm.Knowledge()
+    engine = r.Knowledge()
     predictions = []
     for title in titles:
         engine.reset()
@@ -44,11 +44,11 @@ def allowed_file(filename):
 @app.route('/Upload', methods=['POST'])
 def upload_file():
     # check if the post request has the file part
-    print(request.files['grammar'])
-    if 'grammar' not in request.files:
+    print(request.files['Rules'])
+    if 'Rules' not in request.files:
         flash('No file part')
         return "False"
-    file = request.files['grammar']
+    file = request.files['Rules']
     # if user does not select file, browser also
     # submit an empty part without filename
     if file and allowed_file(file.filename):
